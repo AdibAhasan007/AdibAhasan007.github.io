@@ -106,11 +106,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body className={poppins.className}>
-        <script
-          type="application/ld+json"
-          // @ts-expect-error JSON literal
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+/>
+
         <Navbar />
         <ToasterClient />
         <div className="container-pad mx-auto max-w-6xl pt-20">{children}</div>
