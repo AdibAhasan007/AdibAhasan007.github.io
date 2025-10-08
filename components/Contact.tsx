@@ -34,7 +34,7 @@ export default function Contact() {
               <input
                 type="text"
                 placeholder="Your Name"
-                className="input-style pl-10"
+                className="input-style pl-24"
               />
             </div>
 
