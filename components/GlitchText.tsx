@@ -14,9 +14,9 @@ export default function GlitchText({ text, className = '', as = 'span' }: Glitch
   return (
     <Component
       data-text={text}
-      className={`glitch-wrapper relative inline-block font-orbitron font-extrabold ${className}`}
+      className={`glitch-wrapper relative inline-block font-orbitron font-extrabold tracking-wide ${className}`}
     >
-      <span className="relative z-10">{text}</span>
+      <span className="relative z-10 select-none">{text}</span>
     </Component>
   );
 }

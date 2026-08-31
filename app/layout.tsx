@@ -1,5 +1,5 @@
 // app/layout.tsx
-import '../styles/globals.css'
+import './globals.css'
 import { Inter, Orbitron, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import ToasterClient from '@/components/ToasterClient'

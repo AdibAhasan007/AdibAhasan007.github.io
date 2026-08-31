@@ -1,14 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { FiBriefcase, FiExternalLink, FiTerminal, FiCheckCircle } from 'react-icons/fi';
+import { FiBriefcase, FiExternalLink, FiTerminal, FiCheckCircle, FiGlobe } from 'react-icons/fi';
 import GlitchText from './GlitchText';
 import TiltCard3D from './TiltCard3D';
 
 type ExpItem = {
   role: string;
   org: string;
-  link?: string;
+  link: string;
+  websiteLabel: string;
   type: string;
   period: string;
   location: string;
@@ -19,40 +20,44 @@ type ExpItem = {
 
 const EXPERIENCES: ExpItem[] = [
   {
-    role: 'AI Engineer & Software Developer',
-    org: 'IYLMA Innovation Limited',
-    type: 'Full-time Position (Completed)',
-    period: 'Jan 1, 2026 – Jul 31, 2026',
-    location: 'Dhaka, Bangladesh',
-    current: false,
-    bullets: [
-      'Developed and maintained production software applications using Python and modern software engineering practices.',
-      'Architected backend logic, feature implementation, system performance tuning, and active debugging.',
-      'Assisted in building AI-based software solutions, neural model integrations, and internal software tools.',
-      'Collaborated with cross-functional engineering teams to analyse business requirements and deliver reliable software.',
-      'Drove rigorous testing, issue identification, documentation, and continuous software quality improvement before deployment.',
-    ],
-    techStack: ['Python', 'AI Systems', 'Backend APIs', 'System Architecture', 'Testing'],
-  },
-  {
     role: 'Co-founder & CEO',
     org: 'Trinity Property Ventures Bangladesh',
     link: 'https://www.facebook.com/profile.php?id=61571774847324',
-    type: 'Entrepreneurship & Tech',
+    websiteLabel: 'Visit Official Page',
+    type: 'Entrepreneurship & Tech Leadership',
     period: '2024 – Present',
     location: 'Dhaka, Bangladesh',
     current: true,
     bullets: [
       'Combine cutting-edge software technology and business leadership to deliver modern prop-tech real estate solutions.',
-      'Steer product roadmap, technology integrations, team operations, and client value delivery.',
-      'Spearhead digital marketing platforms, client dashboards, and operational automation.',
+      'Steer product roadmap, engineering architecture, cross-functional team operations, and client value delivery.',
+      'Spearhead digital marketing platforms, client analytics dashboards, and operational business automation.',
     ],
-    techStack: ['Leadership', 'PropTech', 'Product Strategy', 'Tech Integration'],
+    techStack: ['Leadership', 'PropTech', 'Product Strategy', 'System Architecture', 'Automation'],
+  },
+  {
+    role: 'AI Engineer & Software Developer',
+    org: 'IYLMA Innovation Limited',
+    link: 'https://iylma.com/',
+    websiteLabel: 'iylma.com',
+    type: 'Full-time Position (Completed)',
+    period: 'Jan 1, 2026 – Jul 31, 2026',
+    location: 'Dhaka, Bangladesh',
+    current: false,
+    bullets: [
+      'Engineered and launched VotingSoft (votingsoft.com), a secure high-throughput election & automated live vote counting platform.',
+      'Developed core modules for EMPO Tracker (workforce progress & screen monitoring), OMR Software (100% accurate automated evaluation), and RMG ERP systems.',
+      'Architected backend REST APIs, PostgreSQL schemas, and AI-driven internal software tools using Python.',
+      'Collaborated with cross-functional teams to deliver enterprise-grade scalability and robust automated test suites with Pytest.',
+      'Drove continuous software performance tuning, code reviews, and production deployment quality.',
+    ],
+    techStack: ['Python', 'VotingSoft', 'Django REST', 'ERP Systems', 'AI Systems', 'Pytest'],
   },
   {
     role: 'Software Engineering Intern – Python',
     org: 'HRSOFT BD',
     link: 'https://hrsoftbd.com/',
+    websiteLabel: 'hrsoftbd.com',
     type: 'Engineering Internship (Completed)',
     period: 'Sep 25, 2025 – Dec 25, 2025',
     location: 'Dhaka, Bangladesh',
@@ -88,7 +93,7 @@ export default function Experience() {
             WORK <GlitchText text="EXPERIENCE" as="span" className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500" />
           </h2>
           <p className="mt-4 font-mono text-xs sm:text-sm text-slate-400">
-            [ LOGGING PROFESSIONAL ROLES &amp; PRODUCTION ACHIEVEMENTS ]
+            [ LOGGING PROFESSIONAL ROLES, ACTIVE VENTURES &amp; ENTERPRISE PLATFORMS ]
           </p>
         </motion.div>
 
@@ -134,26 +139,24 @@ export default function Experience() {
                         {/* Top Header Row */}
                         <div className="flex flex-wrap items-start justify-between gap-2 pb-3 mb-4 border-b border-cyan-500/20">
                           <div>
-                            <div className="flex items-center gap-2">
-                              <h3 className="font-orbitron text-base sm:text-lg font-bold text-white leading-snug">
-                                {exp.role}
-                              </h3>
-                            </div>
-                            <div className="flex items-center gap-1.5 mt-1 font-mono text-xs text-cyan-400">
-                              {exp.link ? (
-                                <a
-                                  href={exp.link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center gap-1 hover:underline hover:text-cyan-300"
-                                >
-                                  <span>{exp.org}</span>
-                                  <FiExternalLink size={12} />
-                                </a>
-                              ) : (
+                            <h3 className="font-orbitron text-base sm:text-lg font-bold text-white leading-snug">
+                              {exp.role}
+                            </h3>
+
+                            {/* Direct Clickable Company Link Button */}
+                            <div className="flex flex-wrap items-center gap-2 mt-2">
+                              <a
+                                href={exp.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-400/40 text-cyan-300 font-mono text-xs font-bold hover:bg-cyan-500/25 hover:border-cyan-300 hover:text-white transition-all shadow-[0_0_10px_rgba(0,240,255,0.2)] group"
+                                title={`Open ${exp.org} official website`}
+                              >
+                                <FiGlobe size={13} className="text-cyan-400 group-hover:rotate-12 transition-transform" />
                                 <span>{exp.org}</span>
-                              )}
-                              <span className="text-slate-500">· {exp.location}</span>
+                                <FiExternalLink size={12} className="opacity-70 group-hover:opacity-100" />
+                              </a>
+                              <span className="text-slate-400 font-mono text-xs">📍 {exp.location}</span>
                             </div>
                           </div>
 
@@ -189,16 +192,28 @@ export default function Experience() {
                           ))}
                         </ul>
 
-                        {/* Tech Stack Pills */}
-                        <div className="pt-3 border-t border-cyan-500/15 flex flex-wrap gap-1.5">
-                          {exp.techStack.map((tech) => (
-                            <span
-                              key={tech}
-                              className="px-2.5 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 font-mono text-[11px]"
-                            >
-                              #{tech}
-                            </span>
-                          ))}
+                        {/* Tech Stack Pills & Direct Website Link Footer */}
+                        <div className="pt-3 border-t border-cyan-500/15 flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex flex-wrap gap-1.5">
+                            {exp.techStack.map((tech) => (
+                              <span
+                                key={tech}
+                                className="px-2.5 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 font-mono text-[11px]"
+                              >
+                                #{tech}
+                              </span>
+                            ))}
+                          </div>
+
+                          <a
+                            href={exp.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-mono text-xs text-cyan-400 hover:text-cyan-200 flex items-center gap-1 font-bold ml-auto"
+                          >
+                            <span>OPEN COMPANY SITE</span>
+                            <FiExternalLink size={12} />
+                          </a>
                         </div>
                       </div>
                     </TiltCard3D>

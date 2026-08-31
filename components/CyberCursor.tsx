@@ -53,10 +53,9 @@ export default function CyberCursor() {
       ring.classList.remove('cursor-click');
     };
 
-    // Fast 120fps hardware-accelerated follow loop for outer ring (no heavy lag/damping)
+    // Fast 120fps hardware-accelerated follow loop for outer ring
     let animationId: number;
     const updateRing = () => {
-      // Rapid interpolation for crisp responsiveness (0.35 factor = ultra fast response)
       ringX += (mouseX - ringX) * 0.38;
       ringY += (mouseY - ringY) * 0.38;
 
@@ -80,7 +79,7 @@ export default function CyberCursor() {
 
   return (
     <>
-      {/* Outer Cyber Reticle Ring (Ultra-Fast Zero-Lag GPU accelerated) */}
+      {/* Outer Cyber Reticle Ring */}
       <div
         ref={ringRef}
         className="pointer-events-none fixed top-0 left-0 z-50 rounded-full border border-cyan-400/60 hidden md:block w-8 h-8 transition-[width,height,border-color,background-color] duration-150 ease-out will-change-transform"
@@ -99,19 +98,6 @@ export default function CyberCursor() {
         ref={dotRef}
         className="pointer-events-none fixed top-0 left-0 z-50 w-2 h-2 rounded-full bg-cyan-400 hidden md:block shadow-[0_0_10px_#00f0ff] will-change-transform"
       />
-
-      <style jsx global>{`
-        .cursor-hover {
-          width: 44px !important;
-          height: 44px !important;
-          border-color: #00ff66 !important;
-          background-color: rgba(0, 255, 102, 0.08) !important;
-          box-shadow: 0 0 25px rgba(0, 255, 102, 0.6), inset 0 0 10px rgba(0, 255, 102, 0.3) !important;
-        }
-        .cursor-click {
-          transform: scale(0.85) !important;
-        }
-      `}</style>
     </>
   );
 }

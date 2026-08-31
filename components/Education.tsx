@@ -20,9 +20,9 @@ const EDUCATION_DATA: Edu[] = [
     title: 'Bachelor of Science – BSc in Computer Science & Engineering',
     org: 'University of Liberal Arts Bangladesh (ULAB)',
     link: 'https://ulab.edu.bd/',
-    note: 'COMPLETED // 2026',
+    note: 'COMPLETED // 2025',
     degree: "Bachelor's Degree",
-    year: '2026',
+    year: '2025',
   },
   {
     title: 'Higher Secondary Certificate (HSC)',

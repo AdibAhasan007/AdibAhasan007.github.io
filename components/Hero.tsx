@@ -237,7 +237,7 @@ export default function Hero() {
                         </div>
                         <div className="text-right">
                           <span className="font-mono text-[11px] text-emerald-400 block">● ACTIVE DEV</span>
-                          <span className="font-mono text-[10px] text-slate-400">ULAB // 2026</span>
+                          <span className="font-mono text-[10px] text-slate-400">ULAB // 2025</span>
                         </div>
                       </div>
                     </div>
