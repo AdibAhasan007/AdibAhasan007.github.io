@@ -10,9 +10,11 @@ export default function ThreeHeroScene() {
     const container = containerRef.current;
     if (!container) return;
 
+    const isMobile = window.innerWidth < 768;
+
     // --- Scene, Camera, Renderer ---
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x02040a, 0.035);
+    scene.fog = new THREE.FogExp2(0x02040a, isMobile ? 0.04 : 0.035);
 
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -20,19 +22,19 @@ export default function ThreeHeroScene() {
       0.1,
       1000
     );
-    camera.position.z = 24;
+    camera.position.z = isMobile ? 32 : 24;
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: !isMobile, // optimize for mobile 60fps
       powerPreference: 'high-performance',
     });
     renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
     container.appendChild(renderer.domElement);
 
     // --- Ambient & Point Lights ---
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
 
     const cyanLight = new THREE.PointLight(0x00f0ff, 4, 50);
@@ -48,18 +50,25 @@ export default function ThreeHeroScene() {
     scene.add(torusGroup);
 
     // Wireframe Torus Knot
-    const torusGeo = new THREE.TorusKnotGeometry(4.8, 1.2, 120, 24, 2, 3);
+    const torusGeo = new THREE.TorusKnotGeometry(
+      isMobile ? 4.0 : 4.8,
+      isMobile ? 1.0 : 1.2,
+      isMobile ? 80 : 120,
+      isMobile ? 16 : 24,
+      2,
+      3
+    );
     const torusWireMat = new THREE.MeshBasicMaterial({
       color: 0x00f0ff,
       wireframe: true,
       transparent: true,
-      opacity: 0.35,
+      opacity: isMobile ? 0.28 : 0.35,
     });
     const torusWireMesh = new THREE.Mesh(torusGeo, torusWireMat);
     torusGroup.add(torusWireMesh);
 
     // Inner Glowing Core
-    const coreGeo = new THREE.IcosahedronGeometry(2.5, 2);
+    const coreGeo = new THREE.IcosahedronGeometry(isMobile ? 2.0 : 2.5, 2);
     const coreMat = new THREE.MeshStandardMaterial({
       color: 0xbd00ff,
       emissive: 0x5a0099,
@@ -90,14 +99,15 @@ export default function ThreeHeroScene() {
     ];
 
     const satellites: { mesh: THREE.Mesh; speed: number; radius: number; angle: number; yOffset: number }[] = [];
+    const satCount = isMobile ? 4 : 6;
 
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < satCount; i++) {
       const geo = satGeos[i % satGeos.length];
       const mat = satMats[i % satMats.length];
       const mesh = new THREE.Mesh(geo, mat);
-      const radius = 9 + Math.random() * 6;
-      const angle = (i / 6) * Math.PI * 2;
-      const yOffset = (Math.random() - 0.5) * 6;
+      const radius = (isMobile ? 7 : 9) + Math.random() * 5;
+      const angle = (i / satCount) * Math.PI * 2;
+      const yOffset = (Math.random() - 0.5) * 5;
       mesh.position.set(Math.cos(angle) * radius, yOffset, Math.sin(angle) * radius);
       satelliteGroup.add(mesh);
       satellites.push({
@@ -110,7 +120,7 @@ export default function ThreeHeroScene() {
     }
 
     // --- Particle Stars Cloud ---
-    const particlesCount = 800;
+    const particlesCount = isMobile ? 400 : 800;
     const posArray = new Float32Array(particlesCount * 3);
     const colorArray = new Float32Array(particlesCount * 3);
 
@@ -135,7 +145,7 @@ export default function ThreeHeroScene() {
     particlesGeo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
     const particlesMat = new THREE.PointsMaterial({
-      size: 0.15,
+      size: isMobile ? 0.18 : 0.15,
       vertexColors: true,
       transparent: true,
       opacity: 0.7,
@@ -144,7 +154,7 @@ export default function ThreeHeroScene() {
     const particlesMesh = new THREE.Points(particlesGeo, particlesMat);
     scene.add(particlesMesh);
 
-    // --- Mouse Parallax Interaction ---
+    // --- Mouse & Touch Parallax Interaction ---
     let mouseX = 0;
     let mouseY = 0;
     let targetX = 0;
@@ -157,12 +167,25 @@ export default function ThreeHeroScene() {
       mouseY = (e.clientY - windowHalfY) * 0.001;
     };
 
-    window.addEventListener('mousemove', onMouseMove);
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+        mouseX = (touch.clientX - windowHalfX) * 0.0012;
+        mouseY = (touch.clientY - windowHalfY) * 0.0012;
+      }
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     // --- Resize Handler ---
     const onResize = () => {
       if (!container) return;
+      const mobileNow = window.innerWidth < 768;
       camera.aspect = container.clientWidth / container.clientHeight;
+      camera.position.z = mobileNow ? 32 : 24;
       camera.updateProjectionMatrix();
       renderer.setSize(container.clientWidth, container.clientHeight);
     };
@@ -177,12 +200,15 @@ export default function ThreeHeroScene() {
       animationFrameId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth mouse follow
+      // Smooth mouse / touch follow + automatic continuous sinusoidal wave on mobile
       targetX += (mouseX - targetX) * 0.05;
       targetY += (mouseY - targetY) * 0.05;
 
-      torusGroup.rotation.x = elapsedTime * 0.25 + targetY * 2;
-      torusGroup.rotation.y = elapsedTime * 0.35 + targetX * 2;
+      const autoRotateY = isMobile ? Math.sin(elapsedTime * 0.5) * 0.4 : 0;
+      const autoRotateX = isMobile ? Math.cos(elapsedTime * 0.4) * 0.3 : 0;
+
+      torusGroup.rotation.x = elapsedTime * 0.25 + targetY * 2 + autoRotateX;
+      torusGroup.rotation.y = elapsedTime * 0.35 + targetX * 2 + autoRotateY;
       torusGroup.position.y = Math.sin(elapsedTime * 0.8) * 0.6;
 
       coreMesh.rotation.y = -elapsedTime * 0.6;
@@ -214,6 +240,7 @@ export default function ThreeHeroScene() {
     // --- Cleanup ---
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('resize', onResize);
       cancelAnimationFrame(animationFrameId);
 
@@ -221,7 +248,6 @@ export default function ThreeHeroScene() {
         container.removeChild(renderer.domElement);
       }
 
-      // Dispose geometries & materials
       torusGeo.dispose();
       torusWireMat.dispose();
       coreGeo.dispose();

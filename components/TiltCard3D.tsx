@@ -38,7 +38,29 @@ export default function TiltCard3D({
     setTilt({ rotateX, rotateY, glareX, glareY, opacity: 1 });
   };
 
-  const handleMouseLeave = () => {
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (e.touches.length === 0) return;
+    const touch = e.touches[0];
+    const card = cardRef.current;
+    if (!card) return;
+
+    const rect = card.getBoundingClientRect();
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+
+    const rotateX = ((y - centerY) / centerY) * -(maxTilt * 0.7);
+    const rotateY = ((x - centerX) / centerX) * (maxTilt * 0.7);
+
+    const glareX = (x / rect.width) * 100;
+    const glareY = (y / rect.height) * 100;
+
+    setTilt({ rotateX, rotateY, glareX, glareY, opacity: 1 });
+  };
+
+  const handleEnd = () => {
     setTilt({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50, opacity: 0 });
   };
 
@@ -46,7 +68,10 @@ export default function TiltCard3D({
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={handleEnd}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleEnd}
+      onTouchCancel={handleEnd}
       className={`relative will-change-transform ${className}`}
       style={{
         perspective: '1200px',
