@@ -1,217 +1,212 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { FiBriefcase, FiExternalLink } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiBriefcase, FiExternalLink, FiTerminal, FiCheckCircle } from 'react-icons/fi';
+import GlitchText from './GlitchText';
+import TiltCard3D from './TiltCard3D';
 
-type Item = {
+type ExpItem = {
   role: string;
   org: string;
   link?: string;
   type: string;
-  bullets: string[];
   period: string;
+  location: string;
   current?: boolean;
-  location?: string;
+  bullets: string[];
+  techStack: string[];
 };
 
-const items: Item[] = [
+const EXPERIENCES: ExpItem[] = [
   {
     role: 'AI Engineer & Software Developer',
     org: 'IYLMA Innovation Limited',
-    type: 'Full-time',
-    location: 'Dhaka, Bangladesh',
-    bullets: [
-      'Develop and maintain software applications using Python and modern software development practices.',
-      'Work on backend logic, feature implementation, debugging, and system improvement.',
-      'Assist in building AI-based software solutions and internal software products.',
-      'Collaborate with team members to analyse requirements and deliver functional software solutions.',
-      'Support testing, issue identification, documentation, and software quality improvement before deployment.',
-    ],
+    type: 'Full-time Position (Completed)',
     period: 'Jan 1, 2026 – Jul 31, 2026',
-    current: true,
-  },
-  {
-    role: 'Software Engineering Intern – Python',
-    org: 'HRSoft BD',
-    link: 'https://hrsoftbd.com/',
-    type: 'Internship',
     location: 'Dhaka, Bangladesh',
-    bullets: [
-      'Built and maintained Python-based backend services and REST APIs using Django REST Framework and FastAPI.',
-      'Assisted in writing clean, testable, and maintainable backend code.',
-      'Worked with PostgreSQL/MySQL database queries and basic database design tasks.',
-      'Used Git and GitHub for version control and collaborative software development.',
-      'Practised unit testing with pytest and supported bug fixing in backend systems.',
-    ],
-    period: 'Sep 25, 2025 – Dec 25, 2025',
     current: false,
+    bullets: [
+      'Developed and maintained production software applications using Python and modern software engineering practices.',
+      'Architected backend logic, feature implementation, system performance tuning, and active debugging.',
+      'Assisted in building AI-based software solutions, neural model integrations, and internal software tools.',
+      'Collaborated with cross-functional engineering teams to analyse business requirements and deliver reliable software.',
+      'Drove rigorous testing, issue identification, documentation, and continuous software quality improvement before deployment.',
+    ],
+    techStack: ['Python', 'AI Systems', 'Backend APIs', 'System Architecture', 'Testing'],
   },
   {
     role: 'Co-founder & CEO',
     org: 'Trinity Property Ventures Bangladesh',
     link: 'https://www.facebook.com/profile.php?id=61571774847324',
-    type: 'Entrepreneurship',
-    location: 'Dhaka, Bangladesh',
-    bullets: [
-      'Blend technology and business to create innovative real estate solutions.',
-      'Drive product direction, team strategy, and value delivery.',
-      'Lead digital marketing and technology integration efforts.',
-    ],
+    type: 'Entrepreneurship & Tech',
     period: '2024 – Present',
+    location: 'Dhaka, Bangladesh',
     current: true,
+    bullets: [
+      'Combine cutting-edge software technology and business leadership to deliver modern prop-tech real estate solutions.',
+      'Steer product roadmap, technology integrations, team operations, and client value delivery.',
+      'Spearhead digital marketing platforms, client dashboards, and operational automation.',
+    ],
+    techStack: ['Leadership', 'PropTech', 'Product Strategy', 'Tech Integration'],
+  },
+  {
+    role: 'Software Engineering Intern – Python',
+    org: 'HRSOFT BD',
+    link: 'https://hrsoftbd.com/',
+    type: 'Engineering Internship (Completed)',
+    period: 'Sep 25, 2025 – Dec 25, 2025',
+    location: 'Dhaka, Bangladesh',
+    current: false,
+    bullets: [
+      'Built and maintained Python-based backend services and high-throughput REST APIs using Django REST Framework and FastAPI.',
+      'Authored clean, testable, and maintainable backend code adhering to clean architecture standards.',
+      'Designed and optimized PostgreSQL and MySQL database queries, relational schemas, and indexing.',
+      'Utilized Git and GitHub for collaborative version control and team code reviews.',
+      'Implemented automated unit testing with pytest and resolved critical backend bugs.',
+    ],
+    techStack: ['Python', 'Django REST', 'FastAPI', 'PostgreSQL', 'MySQL', 'Pytest'],
   },
 ];
 
-function ExperienceCard({ item, index }: { item: Item; index: number }) {
-  const leftSide = index % 2 === 0;
-
-  return (
-    <li className="relative flex min-h-[200px] items-center">
-      {/* Timeline node */}
-      <div className="timeline-node pointer-events-none" style={{ background: item.current ? '#6366f1' : '#94a3b8' }}>
-        <div className="absolute inset-0 rounded-full" style={{
-          boxShadow: item.current
-            ? '0 0 0 6px rgba(99,102,241,0.15), 0 0 20px rgba(99,102,241,0.3)'
-            : '0 0 0 6px rgba(148,163,184,0.1)',
-        }} />
-        {item.current && (
-          <div className="absolute inset-0 rounded-full bg-indigo-500 opacity-20 animate-ping" />
-        )}
-      </div>
-
-      {/* Connector stub */}
-      <div
-        className="hidden md:block absolute top-1/2 h-[1px]"
-        style={{
-          background: `linear-gradient(90deg, ${item.current ? 'rgba(99,102,241,0.4)' : 'rgba(148,163,184,0.2)'}, transparent)`,
-          left: leftSide ? 'auto' : '50%',
-          right: leftSide ? '50%' : 'auto',
-          transform: 'translateY(-50%)',
-          width: '64px',
-        }}
-      />
-
-      {/* Card */}
-      <motion.div
-        initial={{ opacity: 0, y: 24, x: leftSide ? -20 : 20 }}
-        whileInView={{ opacity: 1, y: 0, x: 0 }}
-        viewport={{ once: true, amount: 0.25 }}
-        transition={{ duration: 0.55, ease: 'easeOut' }}
-        className={[
-          'glass-card-hover glass-premium relative w-full md:w-[44%] p-5 rounded-2xl group',
-          leftSide ? 'md:mr-auto' : 'md:ml-auto',
-        ].join(' ')}
-      >
-        {/* Top row */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-center gap-3">
-            <div className={`flex items-center justify-center w-9 h-9 rounded-xl border flex-shrink-0 ${
-              item.current
-                ? 'bg-indigo-500/10 border-indigo-500/20 text-indigo-400'
-                : 'bg-slate-500/10 border-slate-500/20 text-slate-400'
-            }`}>
-              <FiBriefcase size={15} />
-            </div>
-            <div>
-              <h3 className="font-display font-bold text-white text-[15px] leading-tight">{item.role}</h3>
-              <div className="flex items-center gap-1.5 mt-0.5">
-                {item.link ? (
-                  <a
-                    href={item.link}
-                    target="_blank"
-                    rel="noopener"
-                    className="text-[12.5px] text-indigo-400 hover:text-indigo-300 underline-animate flex items-center gap-1 transition-colors"
-                  >
-                    {item.org} <FiExternalLink size={10} />
-                  </a>
-                ) : (
-                  <span className="text-[12.5px] text-indigo-400">{item.org}</span>
-                )}
-                {item.location && (
-                  <span className="text-[11px] text-slate-600">· {item.location}</span>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-shrink-0 text-right">
-            {item.current && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400 bg-emerald-400/10 border border-emerald-400/20 rounded-full px-2 py-0.5 mb-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Current
-              </span>
-            )}
-            <div className="text-[11px] text-slate-500 mt-1 font-medium leading-tight">{item.period}</div>
-          </div>
-        </div>
-
-        {/* Type badge */}
-        <span className="inline-block tag mb-3">{item.type}</span>
-
-        {/* Bullets */}
-        <ul className="space-y-1.5">
-          {item.bullets.map((b, i) => (
-            <li key={i} className="flex items-start gap-2 text-[12.5px] text-slate-400 leading-relaxed">
-              <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-400/60 flex-shrink-0" />
-              {b}
-            </li>
-          ))}
-        </ul>
-
-        {/* Hover glow */}
-        <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-          style={{ background: 'radial-gradient(600px at 50% 0%, rgba(99,102,241,0.06), transparent 60%)' }} />
-      </motion.div>
-    </li>
-  );
-}
-
 export default function Experience() {
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 65%', 'end 25%'] });
-  const lineScaleY = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   return (
-    <section id="experience" className="relative py-8">
-      <div className="max-w-6xl mx-auto px-6">
-        {/* Header */}
+    <section id="experience" className="relative py-20 overflow-hidden">
+      <div className="relative z-10 max-w-[1680px] mx-auto px-4 sm:px-8 xl:px-12">
+        {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.6 }}
+          className="text-center max-w-3xl mx-auto mb-16"
         >
-          <div className="section-tag">
-            <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 inline-block" />
-            Career Path
+          <div className="cyber-tag mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping inline-block" />
+            04 // CAREER TELEMETRY
           </div>
-          <h2 className="section-title-premium">
-            Work <span className="gradient-text">Experience</span>
+          <h2 className="cyber-title text-3xl sm:text-4xl md:text-5xl font-extrabold text-white">
+            WORK <GlitchText text="EXPERIENCE" as="span" className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-500" />
           </h2>
+          <p className="mt-4 font-mono text-xs sm:text-sm text-slate-400">
+            [ LOGGING PROFESSIONAL ROLES &amp; PRODUCTION ACHIEVEMENTS ]
+          </p>
         </motion.div>
 
-        {/* Timeline */}
-        <div ref={ref} className="relative mt-12 max-w-4xl mx-auto">
-          {/* Ghost line */}
-          <div className="timeline-line hidden md:block" />
-          {/* Scroll fill */}
-          <motion.div
-            style={{ scaleY: lineScaleY, transformOrigin: 'top' }}
-            className="pointer-events-none hidden md:block absolute left-1/2 top-0 h-full w-[1px] -translate-x-1/2"
-            aria-hidden
-          >
-            <div className="h-full w-full" style={{
-              background: 'linear-gradient(180deg, #6366f1, #06b6d4, #8b5cf6)',
-              boxShadow: '0 0 8px rgba(99,102,241,0.4)',
-            }} />
-          </motion.div>
+        {/* Cyber Timeline */}
+        <div className="relative max-w-6xl mx-auto">
+          {/* Central Laser Beam for Desktop */}
+          <div className="hidden md:block absolute left-1/2 top-4 bottom-4 w-[2px] -translate-x-1/2 bg-gradient-to-b from-cyan-500 via-purple-500 to-green-500 shadow-[0_0_12px_rgba(0,240,255,0.6)]" />
 
-          <ul className="space-y-14 md:space-y-24">
-            {items.map((item, i) => (
-              <ExperienceCard key={i} item={item} index={i} />
-            ))}
-          </ul>
+          <div className="space-y-12 md:space-y-16">
+            {EXPERIENCES.map((exp, idx) => {
+              const isEven = idx % 2 === 0;
+
+              return (
+                <div
+                  key={exp.role + exp.org}
+                  className="relative flex flex-col md:flex-row items-center"
+                >
+                  {/* Central Node */}
+                  <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-8 z-20 items-center justify-center">
+                    <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center bg-[#02040a] ${
+                      exp.current
+                        ? 'border-emerald-400 shadow-[0_0_20px_#00ff66]'
+                        : 'border-cyan-400 shadow-[0_0_15px_#00f0ff]'
+                    }`}>
+                      <span className={`w-2.5 h-2.5 rounded-full ${exp.current ? 'bg-emerald-400 animate-ping' : 'bg-cyan-400'}`} />
+                    </div>
+                  </div>
+
+                  {/* Card Container with 3D Tilt */}
+                  <motion.div
+                    initial={{ opacity: 0, x: isEven ? -40 : 40, y: 20 }}
+                    whileInView={{ opacity: 1, x: 0, y: 0 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ duration: 0.6 }}
+                    className={`w-full md:w-[47%] ${
+                      isEven ? 'md:mr-auto' : 'md:ml-auto'
+                    }`}
+                  >
+                    <TiltCard3D maxTilt={10}>
+                      <div className={`cyber-card p-6 sm:p-7 rounded-2xl hud-corner relative overflow-hidden ${
+                        exp.current ? 'border-emerald-400/40 shadow-[0_0_30px_rgba(0,255,102,0.15)]' : ''
+                      }`}>
+                        {/* Top Header Row */}
+                        <div className="flex flex-wrap items-start justify-between gap-2 pb-3 mb-4 border-b border-cyan-500/20">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h3 className="font-orbitron text-base sm:text-lg font-bold text-white leading-snug">
+                                {exp.role}
+                              </h3>
+                            </div>
+                            <div className="flex items-center gap-1.5 mt-1 font-mono text-xs text-cyan-400">
+                              {exp.link ? (
+                                <a
+                                  href={exp.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center gap-1 hover:underline hover:text-cyan-300"
+                                >
+                                  <span>{exp.org}</span>
+                                  <FiExternalLink size={12} />
+                                </a>
+                              ) : (
+                                <span>{exp.org}</span>
+                              )}
+                              <span className="text-slate-500">· {exp.location}</span>
+                            </div>
+                          </div>
+
+                          {exp.current ? (
+                            <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 font-mono text-[10px] font-bold flex items-center gap-1.5 shadow-[0_0_10px_rgba(0,255,102,0.3)]">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                              CURRENT // ACTIVE
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-300 font-mono text-[10px] font-semibold">
+                              ✓ COMPLETED
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Meta info tags */}
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#02040a] border border-cyan-500/20 font-mono text-[11px] text-cyan-300">
+                            🗓️ {exp.period}
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-md bg-[#02040a] border border-purple-500/20 font-mono text-[11px] text-purple-300">
+                            ⚙️ {exp.type}
+                          </span>
+                        </div>
+
+                        {/* Bullets */}
+                        <ul className="space-y-2 mb-5">
+                          {exp.bullets.map((b, i) => (
+                            <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-slate-300 font-sans leading-relaxed">
+                              <span className="text-cyan-400 font-mono text-xs mt-0.5">&gt;&gt;</span>
+                              <span>{b}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* Tech Stack Pills */}
+                        <div className="pt-3 border-t border-cyan-500/15 flex flex-wrap gap-1.5">
+                          {exp.techStack.map((tech) => (
+                            <span
+                              key={tech}
+                              className="px-2.5 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/25 text-cyan-300 font-mono text-[11px]"
+                            >
+                              #{tech}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </TiltCard3D>
+                  </motion.div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

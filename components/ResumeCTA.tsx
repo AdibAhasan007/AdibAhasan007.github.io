@@ -1,185 +1,81 @@
 'use client';
 
-import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { FaDownload } from 'react-icons/fa';
-import { FiArrowRight } from 'react-icons/fi';
-import { useRef, MouseEvent } from 'react';
+import { motion } from 'framer-motion';
+import { FiDownload, FiMail, FiCpu, FiFileText } from 'react-icons/fi';
+import confetti from 'canvas-confetti';
+import GlitchText from './GlitchText';
+import TiltCard3D from './TiltCard3D';
 
 const CV_URL =
   'https://drive.usercontent.google.com/u/0/uc?id=12z3WmCOgPKaOxWq9Ys7awmLxt5rnLPm4&export=download';
 
-const SPARKLES = [
-  { x: '10%', y: '20%', size: 6, delay: 0 },
-  { x: '88%', y: '15%', size: 8, delay: 0.3 },
-  { x: '75%', y: '70%', size: 5, delay: 0.6 },
-  { x: '25%', y: '75%', size: 7, delay: 0.9 },
-  { x: '55%', y: '12%', size: 5, delay: 1.2 },
-  { x: '92%', y: '50%', size: 6, delay: 0.45 },
-  { x: '8%',  y: '55%', size: 4, delay: 0.75 },
-];
-
 export default function ResumeCTA() {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-
-  const glowX = useTransform(mx, (v) => `${v * 100}%`);
-  const glowY = useTransform(my, (v) => `${v * 100}%`);
-
-  const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-    const el = cardRef.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    mx.set((e.clientX - rect.left) / rect.width);
-    my.set((e.clientY - rect.top) / rect.height);
+  const triggerConfetti = () => {
+    confetti({
+      particleCount: 90,
+      spread: 80,
+      origin: { y: 0.6 },
+      colors: ['#00f0ff', '#bd00ff', '#00ff66'],
+    });
   };
 
-  const onMouseLeave = () => { mx.set(0.5); my.set(0.5); };
-
   return (
-    <section className="relative py-8">
-      <div className="max-w-6xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.7, ease: 'easeOut' }}
-        >
-          <div
-            ref={cardRef}
-            onMouseMove={onMouseMove}
-            onMouseLeave={onMouseLeave}
-            className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0a1628]"
-            style={{ boxShadow: '0 20px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)' }}
-          >
-            {/* Aurora background */}
+    <section className="relative py-16 overflow-hidden">
+      <div className="relative z-10 max-w-[1680px] mx-auto px-4 sm:px-8 xl:px-12">
+        <TiltCard3D maxTilt={6} glare={true}>
+          <div className="cyber-card p-8 sm:p-16 rounded-3xl hud-corner relative overflow-hidden text-center bg-gradient-to-b from-[#06122c] to-[#02040a] border-cyan-500/30">
+            {/* Animated Background Laser Glow */}
             <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  'radial-gradient(60% 80% at 20% 20%, rgba(99,102,241,0.18), transparent),' +
-                  'radial-gradient(50% 70% at 80% 30%, rgba(139,92,246,0.15), transparent),' +
-                  'radial-gradient(60% 70% at 50% 110%, rgba(6,182,212,0.12), transparent)',
-                filter: 'blur(30px)',
-              }}
+              aria-hidden="true"
+              className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-cyan-500/20 blur-[100px]"
             />
-
-            {/* Mouse-follow spotlight */}
-            <motion.div
-              aria-hidden
-              className="pointer-events-none absolute -inset-px"
-              style={{
-                background: useTransform(
-                  [glowX, glowY],
-                  ([x, y]) =>
-                    `radial-gradient(400px 300px at ${x} ${y}, rgba(99,102,241,0.12), transparent 60%)`,
-                ),
-              }}
-            />
-
-            {/* Grid lines */}
             <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.03]"
-              style={{
-                backgroundImage:
-                  'linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px)',
-                backgroundSize: '60px 60px',
-              }}
+              aria-hidden="true"
+              className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full bg-purple-500/20 blur-[100px]"
             />
 
-            {/* Sparkles */}
-            {SPARKLES.map((s, i) => (
-              <motion.span
-                key={i}
-                aria-hidden
-                className="pointer-events-none absolute rounded-full"
-                style={{
-                  top: s.y, left: s.x,
-                  width: s.size, height: s.size,
-                  background: 'radial-gradient(circle, rgba(255,255,255,0.8), transparent 70%)',
-                  boxShadow: '0 0 12px rgba(255,255,255,0.3)',
-                }}
-                animate={{ y: [0, -8, 0], opacity: [0.5, 1, 0.5], scale: [1, 1.2, 1] }}
-                transition={{ repeat: Infinity, duration: 3 + i * 0.3, delay: s.delay, ease: 'easeInOut' }}
-              />
-            ))}
-
-            {/* Content */}
-            <div className="relative z-10 text-center px-8 py-16 sm:px-16 sm:py-20">
-              {/* Badge */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="section-tag mx-auto w-fit mb-6"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse inline-block" />
-                Resume Available
-              </motion.div>
-
-              <motion.h2
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="section-title-premium text-center"
-              >
-                Want a quick{' '}
-                <span className="gradient-text">overview?</span>
-              </motion.h2>
-
-              <motion.p
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="mt-4 text-base text-slate-400 max-w-xl mx-auto"
-              >
-                Grab my latest resume — projects, skills, and experience all in one clean PDF.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 12, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.35, type: 'spring', stiffness: 280, damping: 20 }}
-                className="mt-8 flex flex-wrap items-center justify-center gap-4"
-              >
-                <motion.a
-                  href={CV_URL}
-                  target="_blank"
-                  rel="noopener"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="btn-primary-premium group flex items-center gap-2.5 px-7 py-3.5 text-base"
-                >
-                  <motion.span
-                    whileHover={{ y: -2 }}
-                    transition={{ type: 'spring', stiffness: 400 }}
-                  >
-                    <FaDownload size={14} />
-                  </motion.span>
-                  <span>Download CV (PDF)</span>
-                </motion.a>
-
-                <a
-                  href="#contact"
-                  className="btn-ghost-premium flex items-center gap-2 px-6 py-3.5 text-base"
-                >
-                  <span>Contact Instead</span>
-                  <FiArrowRight size={15} />
-                </a>
-              </motion.div>
+            {/* Top Badge */}
+            <div className="cyber-tag mb-5 mx-auto">
+              <FiFileText size={14} className="text-cyan-400" />
+              <span>OFFICIAL CURRICULUM VITAE // 2026</span>
             </div>
 
-            {/* Top/bottom edge fade */}
-            <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/[0.03] to-transparent" />
-            <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/[0.03] to-transparent" />
+            {/* Title */}
+            <h2 className="cyber-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white max-w-4xl mx-auto">
+              LOOKING TO HIRE A <GlitchText text="HIGH-CALIBER" as="span" className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-green-400" /> ENGINEER?
+            </h2>
+
+            <p className="mt-5 font-sans text-sm sm:text-base md:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
+              Download my comprehensive verified resume covering production AI systems, backend microservices, real-time APIs, and core research artifacts.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
+              <a
+                href={CV_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={triggerConfetti}
+                className="btn-cyber-primary text-xs sm:text-sm py-4 px-9 flex items-center gap-2.5 shadow-[0_0_30px_rgba(0,240,255,0.5)]"
+              >
+                <FiDownload size={16} className="animate-bounce" />
+                <span>DOWNLOAD RESUME (PDF)</span>
+              </a>
+
+              <a
+                href="#contact"
+                className="btn-cyber-ghost text-xs sm:text-sm py-4 px-8 flex items-center gap-2"
+              >
+                <FiMail size={16} />
+                <span>DISCUSS OPPORTUNITIES</span>
+              </a>
+            </div>
+
+            <div className="mt-7 font-mono text-xs text-cyan-400/80">
+              [ VERIFIED FOR SOFTWARE ENGINEER // AI ENGINEER // BACKEND ROLES ]
+            </div>
           </div>
-        </motion.div>
+        </TiltCard3D>
       </div>
     </section>
   );

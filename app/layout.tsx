@@ -1,17 +1,19 @@
 // app/layout.tsx
 import '../styles/globals.css'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Inter, Orbitron, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import ToasterClient from '@/components/ToasterClient'
 import Footer from '@/components/Footer'
-import AnimatedCursor from '@/components/AnimatedCursor'
+import CyberCursor from '@/components/CyberCursor'
 import ScrollProgress from '@/components/ScrollProgress'
+import SmoothScroll from '@/components/SmoothScroll'
 
 // ---- SEO constants ----
 const SITE_URL = 'https://adibahasanchowdhury.vercel.app'
-const SITE_NAME = 'Adib Ahasan Chowdhury — AI Engineer & Software Developer'
+const SITE_NAME = 'Adib Ahasan Chowdhury | AI Engineer & Software Developer'
 const SITE_DESC =
-  'AI Engineer & Software Developer at IYLMA Innovation Limited | Python Backend Developer | CSE Graduate from ULAB | Co-founder & CEO of Trinity Property Ventures Bangladesh | Django REST, FastAPI, PostgreSQL specialist.'
+  'Software Engineer & AI Specialist | Former AI Engineer & Software Developer at IYLMA Innovation Limited | CSE Graduate from ULAB | Co-founder & CEO of Trinity Property Ventures Bangladesh | Django REST, FastAPI, PostgreSQL specialist.'
+
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -24,7 +26,7 @@ export const metadata = {
     title: SITE_NAME,
     siteName: SITE_NAME,
     description: SITE_DESC,
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Adib Ahasan Chowdhury' }],
+    images: [{ url: '/adib.jpg', width: 1200, height: 630, alt: 'Adib Ahasan Chowdhury' }],
     locale: 'en_US',
   },
   twitter: {
@@ -33,7 +35,7 @@ export const metadata = {
     creator: '@AdibAhasan',
     title: SITE_NAME,
     description: SITE_DESC,
-    images: ['/og.png'],
+    images: ['/adib.jpg'],
   },
   icons: {
     icon: '/favicon.ico',
@@ -49,7 +51,13 @@ export const metadata = {
 
 const inter = Inter({
   variable: '--font-inter',
-  weight: ['300', '400', '500', '600', '700', '800'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const orbitron = Orbitron({
+  variable: '--font-orbitron',
+  weight: ['400', '500', '600', '700', '800', '900'],
   subsets: ['latin'],
   display: 'swap',
 })
@@ -61,73 +69,91 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 })
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-mono',
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'Person',
-        '@id': `${SITE_URL}#person`,
-        name: 'Adib Ahasan Chowdhury',
-        alternateName: ['Adib Ahasan', 'Adib'],
-        url: SITE_URL,
-        image: `${SITE_URL}/adib.jpg`,
-        jobTitle: 'Python Developer Intern',
-        worksFor: { '@type': 'Organization', name: 'HRSoft BD', url: 'https://hrsoftbd.com/' },
-        alumniOf: [
-          { '@type': 'CollegeOrUniversity', name: 'University of Liberal Arts Bangladesh (ULAB)', url: 'https://ulab.edu.bd/' },
-          { '@type': 'EducationalOrganization', name: 'Northern College Bangladesh (NCB)', url: 'https://ncb.edu.bd/' }
-        ],
-        sameAs: [
-          'https://www.facebook.com/Pranto.Adib',
-          'https://www.instagram.com/pranto.adib',
-          'https://x.com/AdibAhasan',
-          'https://www.linkedin.com/in/adib-ahasan-chowdhury-41178213b/',
-          'https://github.com/AdibAhasan007',
-          'https://bio.link/adibpranto',
-        ],
-        email: 'mailto:pranto7@gmail.com',
-        address: { '@type': 'PostalAddress', addressLocality: 'Dhaka', addressCountry: 'BD' },
-        description: SITE_DESC,
-      },
-      {
-        '@type': 'WebSite',
-        '@id': `${SITE_URL}#website`,
-        url: SITE_URL,
-        name: SITE_NAME,
-        description: SITE_DESC,
-        inLanguage: 'en',
-        publisher: { '@id': `${SITE_URL}#person` },
-      },
-      {
-        '@type': 'Organization',
-        name: 'Trinity Property Ventures Bangladesh',
-        url: 'https://www.facebook.com/profile.php?id=61571774847324',
-        founder: { '@id': `${SITE_URL}#person` },
-      }
-    ]
+    '@type': 'Person',
+    name: 'Adib Ahasan Chowdhury',
+    jobTitle: 'AI Engineer & Software Developer',
+    worksFor: {
+      '@type': 'Organization',
+      name: 'IYLMA Innovation Limited',
+    },
+    alumniOf: {
+      '@type': 'EducationalOrganization',
+      name: 'University of Liberal Arts Bangladesh (ULAB)',
+    },
+    url: SITE_URL,
+    sameAs: [
+      'https://github.com/AdibAhasan007',
+      'https://www.linkedin.com/in/adib-ahasan-chowdhury-41178213b/',
+      'https://x.com/AdibAhasan',
+      'https://medium.com/@pranto7',
+    ],
   }
 
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html
+      lang="en"
+      className={`dark ${inter.variable} ${orbitron.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+    >
+      <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        {/* Noise texture overlay */}
-        <div className="noise-overlay" aria-hidden />
-        {/* Custom cursor */}
-        <AnimatedCursor />
-        {/* Scroll progress bar */}
+      </head>
+      <body className="min-h-screen bg-[#02040a] text-slate-100 antialiased overflow-x-hidden relative font-sans">
+        {/* Lenis Smooth Scroll */}
+        <SmoothScroll />
+
+        {/* Global futuristic background layers */}
+        <div className="cyber-grid-bg" aria-hidden="true" />
+        <div className="cyber-stars-bg" aria-hidden="true" />
+        <div className="crt-overlay" aria-hidden="true" />
+
+        {/* Ambient Top & Bottom Neon Plasma Orbs */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed top-0 left-1/4 -translate-y-1/2 w-[700px] h-[450px] rounded-full opacity-20 blur-[130px] z-0"
+          style={{ background: 'radial-gradient(circle, #00f0ff 0%, #bd00ff 70%, transparent 100%)' }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed bottom-0 right-1/4 translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-15 blur-[120px] z-0"
+          style={{ background: 'radial-gradient(circle, #bd00ff 0%, #00ff66 80%, transparent 100%)' }}
+        />
+
+        {/* Top Scroll Laser Indicator */}
         <ScrollProgress />
-        {/* Navbar */}
+
+        {/* Interactive Cyber Reticle Cursor */}
+        <CyberCursor />
+
+        {/* Futuristic HUD Navbar */}
         <Navbar />
-        <ToasterClient />
-        <div className="container-pad mx-auto max-w-6xl pt-20">
+
+        {/* Main Content Area */}
+        <div className="relative z-10">
           {children}
         </div>
+
+        {/* Futuristic Cyber Footer */}
         <Footer />
+
+        {/* Interactive Notifications */}
+        <ToasterClient />
       </body>
     </html>
   )

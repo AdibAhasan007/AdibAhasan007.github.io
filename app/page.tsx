@@ -11,7 +11,7 @@ import Contact from "@/components/Contact";
 
 export default function Home() {
   return (
-    <main className="stack container-pad max-w-6xl mx-auto">
+    <main className="w-full overflow-hidden">
       <Hero />
       <About />
       <Skills />
