@@ -1,15 +1,17 @@
 // app/layout.tsx
 import '../styles/globals.css'
-import { Poppins } from 'next/font/google'
+import { Inter, Space_Grotesk } from 'next/font/google'
 import Navbar from '@/components/Navbar'
 import ToasterClient from '@/components/ToasterClient'
 import Footer from '@/components/Footer'
+import AnimatedCursor from '@/components/AnimatedCursor'
+import ScrollProgress from '@/components/ScrollProgress'
 
 // ---- SEO constants ----
 const SITE_URL = 'https://adibahasanchowdhury.vercel.app'
-const SITE_NAME = 'Adib Ahasan Chowdhury — Portfolio'
+const SITE_NAME = 'Adib Ahasan Chowdhury — AI Engineer & Software Developer'
 const SITE_DESC =
-  'CSE graduate from ULAB, Python Developer Intern at HRSoft BD, and Co-founder & CEO of Trinity Property Ventures Bangladesh. I build practical tools, write clean code, and share insights.'
+  'AI Engineer & Software Developer at IYLMA Innovation Limited | Python Backend Developer | CSE Graduate from ULAB | Co-founder & CEO of Trinity Property Ventures Bangladesh | Django REST, FastAPI, PostgreSQL specialist.'
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -45,10 +47,21 @@ export const metadata = {
   referrer: 'origin-when-cross-origin',
 }
 
-const poppins = Poppins({ weight: ['300','400','500','600','700','800'], subsets: ['latin'] })
+const inter = Inter({
+  variable: '--font-inter',
+  weight: ['300', '400', '500', '600', '700', '800'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const spaceGrotesk = Space_Grotesk({
+  variable: '--font-space',
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // JSON-LD (Person + WebSite + Organization)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@graph': [
@@ -58,7 +71,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: 'Adib Ahasan Chowdhury',
         alternateName: ['Adib Ahasan', 'Adib'],
         url: SITE_URL,
-        image: `${SITE_URL}/adib.jpg`, // put your headshot in /public/adib.jpg
+        image: `${SITE_URL}/adib.jpg`,
         jobTitle: 'Python Developer Intern',
         worksFor: { '@type': 'Organization', name: 'HRSoft BD', url: 'https://hrsoftbd.com/' },
         alumniOf: [
@@ -72,8 +85,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           'https://www.linkedin.com/in/adib-ahasan-chowdhury-41178213b/',
           'https://github.com/AdibAhasan007',
           'https://bio.link/adibpranto',
-          'https://www.facebook.com/profile.php?id=61571774847324', // Trinity
-          'https://share.google/M4NmEwM2REKebomJt'                 // Knowledge panel share
         ],
         email: 'mailto:pranto7@gmail.com',
         address: { '@type': 'PostalAddress', addressLocality: 'Dhaka', addressCountry: 'BD' },
@@ -87,33 +98,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         description: SITE_DESC,
         inLanguage: 'en',
         publisher: { '@id': `${SITE_URL}#person` },
-        potentialAction: {
-          '@type': 'SearchAction',
-          target: `${SITE_URL}/?q={search_term_string}`,
-          'query-input': 'required name=search_term_string'
-        }
       },
       {
         '@type': 'Organization',
         name: 'Trinity Property Ventures Bangladesh',
         url: 'https://www.facebook.com/profile.php?id=61571774847324',
         founder: { '@id': `${SITE_URL}#person` },
-        sameAs: ['https://www.facebook.com/profile.php?id=61571774847324']
       }
     ]
   }
 
   return (
     <html lang="en" className="dark">
-      <body className={poppins.className}>
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-/>
-
+      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {/* Noise texture overlay */}
+        <div className="noise-overlay" aria-hidden />
+        {/* Custom cursor */}
+        <AnimatedCursor />
+        {/* Scroll progress bar */}
+        <ScrollProgress />
+        {/* Navbar */}
         <Navbar />
         <ToasterClient />
-        <div className="container-pad mx-auto max-w-6xl pt-20">{children}</div>
+        <div className="container-pad mx-auto max-w-6xl pt-20">
+          {children}
+        </div>
         <Footer />
       </body>
     </html>

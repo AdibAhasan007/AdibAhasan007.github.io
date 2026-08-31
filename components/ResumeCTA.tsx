@@ -2,160 +2,185 @@
 
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { FaDownload } from 'react-icons/fa';
+import { FiArrowRight } from 'react-icons/fi';
 import { useRef, MouseEvent } from 'react';
 
 const CV_URL =
   'https://drive.usercontent.google.com/u/0/uc?id=12z3WmCOgPKaOxWq9Ys7awmLxt5rnLPm4&export=download';
 
-const sparkles = [
-  { x: '15%', y: '25%', size: 8, delay: 0.1 },
-  { x: '85%', y: '30%', size: 6, delay: 0.25 },
-  { x: '70%', y: '65%', size: 7, delay: 0.4 },
-  { x: '35%', y: '70%', size: 5, delay: 0.55 },
-  { x: '55%', y: '20%', size: 6, delay: 0.7 },
+const SPARKLES = [
+  { x: '10%', y: '20%', size: 6, delay: 0 },
+  { x: '88%', y: '15%', size: 8, delay: 0.3 },
+  { x: '75%', y: '70%', size: 5, delay: 0.6 },
+  { x: '25%', y: '75%', size: 7, delay: 0.9 },
+  { x: '55%', y: '12%', size: 5, delay: 1.2 },
+  { x: '92%', y: '50%', size: 6, delay: 0.45 },
+  { x: '8%',  y: '55%', size: 4, delay: 0.75 },
 ];
 
 export default function ResumeCTA() {
   const cardRef = useRef<HTMLDivElement>(null);
+  const mx = useMotionValue(0.5);
+  const my = useMotionValue(0.5);
 
-  // Fancy mouse glow
-  const mx = useMotionValue(0);
-  const my = useMotionValue(0);
-  const glowX = useTransform(mx, (v) => `calc(${v}px - 150px)`);
-  const glowY = useTransform(my, (v) => `calc(${v}px - 150px)`);
+  const glowX = useTransform(mx, (v) => `${v * 100}%`);
+  const glowY = useTransform(my, (v) => `${v * 100}%`);
 
   const onMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    mx.set(e.clientX - rect.left);
-    my.set(e.clientY - rect.top);
+    mx.set((e.clientX - rect.left) / rect.width);
+    my.set((e.clientY - rect.top) / rect.height);
   };
 
+  const onMouseLeave = () => { mx.set(0.5); my.set(0.5); };
+
   return (
-    <section className="mx-auto max-w-6xl px-6 sm:px-8">
-      {/* Container entrance */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.5 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="relative"
-      >
-        {/* Aurora / Glow */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-3xl"
-          style={{
-            background:
-              'radial-gradient(40% 60% at 20% 20%, rgba(59,130,246,.18), transparent), radial-gradient(40% 60% at 80% 30%, rgba(139,92,246,.18), transparent), radial-gradient(60% 60% at 50% 100%, rgba(34,197,94,.12), transparent)',
-            filter: 'blur(24px)',
-          }}
-        />
-
-        {/* Card */}
+    <section className="relative py-8">
+      <div className="max-w-6xl mx-auto px-6">
         <motion.div
-          ref={cardRef}
-          onMouseMove={onMouseMove}
-          className="relative overflow-hidden rounded-3xl border border-white/10 bg-[#0d1320] px-6 py-14 shadow-[0_10px_40px_rgba(0,0,0,.35)] sm:px-12"
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.4 }}
+          transition={{ duration: 0.7, ease: 'easeOut' }}
         >
-          {/* Mouse-follow glow */}
-          <motion.div
-            aria-hidden
-            className="pointer-events-none absolute h-[300px] w-[300px] rounded-full"
-            style={{
-              top: glowY as any,
-              left: glowX as any,
-              background:
-                'radial-gradient(150px 150px at center, rgba(56,189,248,.18), rgba(0,0,0,0))',
-              filter: 'blur(10px)',
-            }}
-          />
-
-          {/* Sparkles */}
-          {sparkles.map((s, i) => (
-            <motion.span
-              key={i}
+          <div
+            ref={cardRef}
+            onMouseMove={onMouseMove}
+            onMouseLeave={onMouseLeave}
+            className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-[#0a1628]"
+            style={{ boxShadow: '0 20px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)' }}
+          >
+            {/* Aurora background */}
+            <div
               aria-hidden
-              className="pointer-events-none absolute rounded-full bg-white/40 dark:bg-white/30"
+              className="pointer-events-none absolute inset-0"
               style={{
-                top: s.y,
-                left: s.x,
-                width: s.size,
-                height: s.size,
-                boxShadow: '0 0 20px rgba(255,255,255,.25)',
-              }}
-              initial={{ y: 0, opacity: 0.6 }}
-              animate={{ y: [0, -6, 0], opacity: [0.6, 1, 0.6] }}
-              transition={{
-                repeat: Infinity,
-                duration: 3.2 + i * 0.2,
-                delay: s.delay,
-                ease: 'easeInOut',
+                background:
+                  'radial-gradient(60% 80% at 20% 20%, rgba(99,102,241,0.18), transparent),' +
+                  'radial-gradient(50% 70% at 80% 30%, rgba(139,92,246,0.15), transparent),' +
+                  'radial-gradient(60% 70% at 50% 110%, rgba(6,182,212,0.12), transparent)',
+                filter: 'blur(30px)',
               }}
             />
-          ))}
 
-          {/* Copy */}
-          <div className="relative z-10 text-center">
-            <motion.h3
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.15, duration: 0.6 }}
-              className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl"
-            >
-              <span className="bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-transparent [text-shadow:0_0_20px_rgba(255,255,255,.08)]">
-                Want a quick overview?
-              </span>
-            </motion.h3>
+            {/* Mouse-follow spotlight */}
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute -inset-px"
+              style={{
+                background: useTransform(
+                  [glowX, glowY],
+                  ([x, y]) =>
+                    `radial-gradient(400px 300px at ${x} ${y}, rgba(99,102,241,0.12), transparent 60%)`,
+                ),
+              }}
+            />
 
-            <motion.p
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.28, duration: 0.55 }}
-              className="mx-auto mt-3 max-w-2xl text-base text-slate-300/80"
-            >
-              Grab my latest resume — projects, skills, and experience in one page.
-            </motion.p>
+            {/* Grid lines */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage:
+                  'linear-gradient(rgba(255,255,255,.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.3) 1px, transparent 1px)',
+                backgroundSize: '60px 60px',
+              }}
+            />
 
-            {/* Button */}
-            <motion.a
-              href={CV_URL}
-              target="_blank"
-              rel="noopener"
-              initial={{ scale: 0.96, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.42, type: 'spring', stiffness: 260, damping: 20 }}
-              className="group relative mx-auto mt-7 inline-flex items-center gap-3 rounded-2xl bg-indigo-600 px-5 py-3 font-semibold text-white shadow-lg shadow-indigo-900/30 outline-0 transition focus:ring-2 focus:ring-indigo-400/50 sm:px-6"
-            >
-              {/* Ripple / pulse */}
-              <span
-                aria-hidden
-                className="absolute inset-0 rounded-2xl bg-indigo-500 opacity-0 blur transition duration-500 group-hover:opacity-30"
-              />
+            {/* Sparkles */}
+            {SPARKLES.map((s, i) => (
               <motion.span
-                className="relative -ml-0.5"
-                whileHover={{ x: -2 }}
-                whileTap={{ scale: 0.95 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              >
-                <FaDownload />
-              </motion.span>
-              <span className="relative">Download CV (PDF)</span>
-            </motion.a>
-          </div>
+                key={i}
+                aria-hidden
+                className="pointer-events-none absolute rounded-full"
+                style={{
+                  top: s.y, left: s.x,
+                  width: s.size, height: s.size,
+                  background: 'radial-gradient(circle, rgba(255,255,255,0.8), transparent 70%)',
+                  boxShadow: '0 0 12px rgba(255,255,255,0.3)',
+                }}
+                animate={{ y: [0, -8, 0], opacity: [0.5, 1, 0.5], scale: [1, 1.2, 1] }}
+                transition={{ repeat: Infinity, duration: 3 + i * 0.3, delay: s.delay, ease: 'easeInOut' }}
+              />
+            ))}
 
-          {/* subtle top/bottom edge gradients */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/5 to-transparent"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white/5 to-transparent"
-          />
+            {/* Content */}
+            <div className="relative z-10 text-center px-8 py-16 sm:px-16 sm:py-20">
+              {/* Badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="section-tag mx-auto w-fit mb-6"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse inline-block" />
+                Resume Available
+              </motion.div>
+
+              <motion.h2
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="section-title-premium text-center"
+              >
+                Want a quick{' '}
+                <span className="gradient-text">overview?</span>
+              </motion.h2>
+
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="mt-4 text-base text-slate-400 max-w-xl mx-auto"
+              >
+                Grab my latest resume — projects, skills, and experience all in one clean PDF.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.35, type: 'spring', stiffness: 280, damping: 20 }}
+                className="mt-8 flex flex-wrap items-center justify-center gap-4"
+              >
+                <motion.a
+                  href={CV_URL}
+                  target="_blank"
+                  rel="noopener"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.97 }}
+                  className="btn-primary-premium group flex items-center gap-2.5 px-7 py-3.5 text-base"
+                >
+                  <motion.span
+                    whileHover={{ y: -2 }}
+                    transition={{ type: 'spring', stiffness: 400 }}
+                  >
+                    <FaDownload size={14} />
+                  </motion.span>
+                  <span>Download CV (PDF)</span>
+                </motion.a>
+
+                <a
+                  href="#contact"
+                  className="btn-ghost-premium flex items-center gap-2 px-6 py-3.5 text-base"
+                >
+                  <span>Contact Instead</span>
+                  <FiArrowRight size={15} />
+                </a>
+              </motion.div>
+            </div>
+
+            {/* Top/bottom edge fade */}
+            <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/[0.03] to-transparent" />
+            <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/[0.03] to-transparent" />
+          </div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }
