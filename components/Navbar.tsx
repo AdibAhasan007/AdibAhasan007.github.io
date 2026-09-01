@@ -43,7 +43,10 @@ export default function Navbar() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 px-4 sm:px-8 xl:px-12 py-3 transition-all duration-300">
+    <header
+      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 xl:px-12 py-3 transition-all duration-300"
+      style={{ paddingTop: 'max(0.75rem, env(safe-area-inset-top))' }}
+    >
       <div
         className={`max-w-[1680px] mx-auto rounded-2xl transition-all duration-300 hud-corner ${
           scrolled

@@ -52,7 +52,7 @@ function CyberTypedRole() {
 
 export default function Hero() {
   return (
-    <section id="home" className="relative min-h-[96vh] flex items-center justify-center pt-24 pb-16 overflow-hidden">
+    <section id="home" className="relative min-h-[96svh] flex items-center justify-center pt-24 pb-16 overflow-hidden">
       {/* 3D Three.js Interactive Particle Canvas */}
       <ThreeHeroScene />
 
@@ -65,7 +65,7 @@ export default function Hero() {
           className="mb-8 flex flex-wrap items-center justify-between gap-3 bg-[#030816]/80 border border-cyan-500/30 rounded-xl px-5 py-2.5 backdrop-blur-md w-full shadow-[0_0_20px_rgba(0,240,255,0.1)]"
         >
           <div className="flex items-center gap-2.5 font-mono text-xs text-cyan-300">
-            <FiCpu className="text-cyan-400 animate-spin" />
+            <FiCpu className="text-cyan-400 animate-pulse" />
             <span>NEURAL CORE // ACTIVE (THREE.JS 3D ENGINE)</span>
           </div>
 

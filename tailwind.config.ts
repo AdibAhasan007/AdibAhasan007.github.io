@@ -132,6 +132,20 @@ export default {
         '108': '1.08',
         '120': '1.20',
       },
+      height: {
+        'screen-svh': '100svh',
+        'screen-dvh': '100dvh',
+      },
+      minHeight: {
+        'screen-svh': '100svh',
+        'screen-dvh': '100dvh',
+      },
+      spacing: {
+        'safe-top': 'env(safe-area-inset-top)',
+        'safe-bottom': 'env(safe-area-inset-bottom)',
+        'safe-left': 'env(safe-area-inset-left)',
+        'safe-right': 'env(safe-area-inset-right)',
+      },
     }
   },
   plugins: []

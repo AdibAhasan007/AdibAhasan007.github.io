@@ -76,6 +76,8 @@ export default function TiltCard3D({
       style={{
         perspective: '1200px',
         transformStyle: 'preserve-3d',
+        /* Critical: allow vertical scroll on iOS while tracking tilt */
+        touchAction: 'pan-y',
       }}
     >
       <div

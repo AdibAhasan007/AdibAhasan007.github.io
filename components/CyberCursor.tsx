@@ -7,8 +7,13 @@ export default function CyberCursor() {
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Only enable on desktop pointer devices
-    if (window.matchMedia('(pointer: coarse)').matches) return;
+    // Guard for SSR and older Android browsers that don't support matchMedia
+    try {
+      if (typeof window === 'undefined') return;
+      if (window.matchMedia('(pointer: coarse)').matches) return;
+    } catch {
+      return; // Touch device fallback
+    }
 
     const dot = dotRef.current;
     const ring = ringRef.current;

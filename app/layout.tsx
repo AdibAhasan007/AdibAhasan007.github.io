@@ -47,6 +47,19 @@ export const metadata = {
   authors: [{ name: 'Adib Ahasan Chowdhury', url: SITE_URL }],
   category: 'Portfolio',
   referrer: 'origin-when-cross-origin',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Adib Ahasan',
+  },
+}
+
+// iOS notch (safe-area) + correct mobile scaling
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: 'cover',
 }
 
 const inter = Inter({
@@ -114,7 +127,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="min-h-screen bg-[#02040a] text-slate-100 antialiased overflow-x-hidden relative font-sans">
+      <body className="min-h-screen bg-[#02040a] text-slate-100 antialiased overflow-x-hidden relative font-sans" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         {/* Lenis Smooth Scroll */}
         <SmoothScroll />
 
@@ -123,15 +136,15 @@ export default function RootLayout({
         <div className="cyber-stars-bg" aria-hidden="true" />
         <div className="crt-overlay" aria-hidden="true" />
 
-        {/* Ambient Top & Bottom Neon Plasma Orbs */}
+        {/* Ambient Top & Bottom Neon Plasma Orbs — hidden on mobile via CSS */}
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed top-0 left-1/4 -translate-y-1/2 w-[700px] h-[450px] rounded-full opacity-20 blur-[130px] z-0"
+          className="neon-orb-top pointer-events-none fixed top-0 left-1/4 -translate-y-1/2 w-[700px] h-[450px] rounded-full opacity-20 blur-[130px] z-0"
           style={{ background: 'radial-gradient(circle, #00f0ff 0%, #bd00ff 70%, transparent 100%)' }}
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none fixed bottom-0 right-1/4 translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-15 blur-[120px] z-0"
+          className="neon-orb-bottom pointer-events-none fixed bottom-0 right-1/4 translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-15 blur-[120px] z-0"
           style={{ background: 'radial-gradient(circle, #bd00ff 0%, #00ff66 80%, transparent 100%)' }}
         />
 

@@ -35,9 +35,11 @@
 
 /* ── Base resets & body ────────────────────── */
 html {
-  scroll-behavior: smooth;
+  /* Removed scroll-behavior:smooth — Lenis handles desktop, mobile uses native (better perf) */
   color-scheme: dark;
   background-color: var(--bg-space);
+  /* iOS safe-area & overscroll */
+  overscroll-behavior-y: none;
 }
 
 body {
@@ -45,6 +47,13 @@ body {
   color: var(--text-main);
   font-family: var(--font-inter), 'Inter', sans-serif;
   overflow-x: hidden;
+  /* Remove 300ms tap delay on iOS */
+  touch-action: manipulation;
+  /* Remove blue tap flash on iOS */
+  -webkit-tap-highlight-color: transparent;
+  /* Crisper text on iOS/macOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
@@ -97,7 +106,7 @@ body {
   opacity: 0.7;
 }
 
-/* CRT Scanline Overlay */
+/* CRT Scanline Overlay — desktop only for performance */
 .crt-overlay {
   position: fixed;
   inset: 0;
@@ -111,19 +120,29 @@ body {
   opacity: 0.15;
 }
 
+/* Disable heavy CRT overlay on mobile for performance */
+@media (max-width: 767px) {
+  .crt-overlay {
+    display: none;
+  }
+}
+
 /* ── Cyber HUD Cards & Glass ──────────────── */
 .cyber-card {
   position: relative;
   background: rgba(6, 14, 32, 0.7);
   border: 1px solid rgba(0, 240, 255, 0.18);
   border-radius: 16px;
-  backdrop-filter: blur(16px);
+  /* Both prefixed and unprefixed for iOS Safari */
   -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
   box-shadow: 
     0 15px 35px rgba(0, 0, 0, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
     inset 0 0 20px rgba(0, 240, 255, 0.03);
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  /* Prevent text size adjust on iOS rotation */
+  -webkit-text-size-adjust: 100%;
 }
 
 .cyber-card:hover {
@@ -452,6 +471,8 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  /* iOS safe-area: sit below the status bar when in standalone mode */
+  top: env(safe-area-inset-top, 0);
   height: 3px;
   width: var(--scroll-progress, 0%);
   background: linear-gradient(90deg, #00f0ff 0%, #bd00ff 60%, #00ff66 100%);
@@ -460,3 +481,80 @@ body {
   transition: width 0.1s linear;
   pointer-events: none;
 }
+
+/* ════════════════════════════════════════════
+   MOBILE-SPECIFIC FIXES (iOS, Android, Touch)
+   ════════════════════════════════════════════ */
+
+/* ── iOS Safari: -webkit-backdrop-filter for all blur elements ─ */
+.backdrop-blur-md  { -webkit-backdrop-filter: blur(12px); }
+.backdrop-blur-xl  { -webkit-backdrop-filter: blur(24px); }
+.backdrop-blur-2xl { -webkit-backdrop-filter: blur(40px); }
+.backdrop-blur-sm  { -webkit-backdrop-filter: blur(4px); }
+
+/* ── Mobile Navbar: top safe-area padding ── */
+@media (max-width: 767px) {
+  header.fixed {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+
+  /* Disable neon plasma orbs on mobile – they cause GPU scroll repaints on iOS */
+  .neon-orb-top,
+  .neon-orb-bottom {
+    display: none;
+  }
+
+  /* Better touch targets (Apple recommends min 44×44px) */
+  a, button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Navbar links don't need 44px min-width constraint */
+  nav a {
+    min-width: unset;
+  }
+
+  /* Terminal window: reduce padding on small screens */
+  .terminal-body {
+    padding: 1rem;
+    font-size: 0.78rem;
+  }
+
+  /* Cyber card: reduce blur on mobile for perf */
+  .cyber-card {
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Scrollbar hidden on mobile */
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
+/* ── Tablet (768–1023px) fixes ──────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .cyber-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+  }
+}
+
+/* ── Prevent iOS zoom on input focus ─────── */
+input[type="text"],
+input[type="email"],
+textarea {
+  font-size: 16px !important;
+}
+
+/* ── Fix iOS momentum scroll in containers ─ */
+.overflow-y-auto,
+.overflow-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Ensure fixed elements clear iOS home indicator ── */
+.fixed-bottom-safe {
+  padding-bottom: env(safe-area-inset-bottom, 16px);
+}
+

@@ -180,7 +180,7 @@ export default function ThreeHeroScene() {
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('touchmove', onTouchMove, { passive: true });
 
-    // --- Resize Handler ---
+    // --- Resize Handler --- (ResizeObserver handles iOS URL bar show/hide too)
     const onResize = () => {
       if (!container) return;
       const mobileNow = window.innerWidth < 768;
@@ -191,6 +191,10 @@ export default function ThreeHeroScene() {
     };
 
     window.addEventListener('resize', onResize);
+
+    // ResizeObserver catches iOS Safari URL-bar slide transitions
+    const resizeObserver = new ResizeObserver(onResize);
+    resizeObserver.observe(container);
 
     // --- Animation Loop ---
     let animationFrameId: number;
@@ -242,6 +246,7 @@ export default function ThreeHeroScene() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('resize', onResize);
+      resizeObserver.disconnect();
       cancelAnimationFrame(animationFrameId);
 
       if (container && renderer.domElement) {

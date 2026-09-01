@@ -118,7 +118,7 @@ export default function Contact() {
                         onChange={handleChange}
                         placeholder="Enter your full name or company"
                         required
-                        className="w-full bg-[#02040a] border border-cyan-500/25 rounded-xl pl-10 pr-4 py-3.5 text-xs sm:text-sm text-white placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all"
+                        className="w-full bg-[#02040a] border border-cyan-500/25 rounded-xl pl-10 pr-4 py-3.5 text-base sm:text-sm text-white placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all"
                       />
                     </div>
                   </div>
@@ -137,7 +137,7 @@ export default function Contact() {
                         onChange={handleChange}
                         placeholder="you@domain.com"
                         required
-                        className="w-full bg-[#02040a] border border-cyan-500/25 rounded-xl pl-10 pr-4 py-3.5 text-xs sm:text-sm text-white placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all"
+                        className="w-full bg-[#02040a] border border-cyan-500/25 rounded-xl pl-10 pr-4 py-3.5 text-base sm:text-sm text-white placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all"
                       />
                     </div>
                   </div>
@@ -156,7 +156,7 @@ export default function Contact() {
                         rows={5}
                         placeholder="Describe your engineering requirements, project vision, or collaborative opportunity..."
                         required
-                        className="w-full bg-[#02040a] border border-cyan-500/25 rounded-xl pl-10 pr-4 py-3.5 text-xs sm:text-sm text-white placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all resize-none"
+                        className="w-full bg-[#02040a] border border-cyan-500/25 rounded-xl pl-10 pr-4 py-3.5 text-base sm:text-sm text-white placeholder-slate-500 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(0,240,255,0.4)] transition-all resize-none"
                       />
                     </div>
                   </div>
