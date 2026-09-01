@@ -11,27 +11,27 @@ export default function AnimatedCursor() {
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    let ringX = 0, ringY = 0;
+    let targetX = -100, targetY = -100;
+    let ringX = -100, ringY = -100;
     let raf: number;
 
     const moveCursor = (e: MouseEvent) => {
-      const x = e.clientX;
-      const y = e.clientY;
-      dot.style.left = `${x}px`;
-      dot.style.top = `${y}px`;
+      targetX = e.clientX;
+      targetY = e.clientY;
+      dot.style.left = `${targetX}px`;
+      dot.style.top = `${targetY}px`;
+    };
 
-      // Ring follows with smooth lag
-      const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-      const animate = () => {
-        ringX = lerp(ringX, x, 0.12);
-        ringY = lerp(ringY, y, 0.12);
-        ring.style.left = `${ringX}px`;
-        ring.style.top = `${ringY}px`;
-        raf = requestAnimationFrame(animate);
-      };
-      cancelAnimationFrame(raf);
+    // Single persistent RAF loop — no memory leak
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+    const animate = () => {
+      ringX = lerp(ringX, targetX, 0.12);
+      ringY = lerp(ringY, targetY, 0.12);
+      ring.style.left = `${ringX}px`;
+      ring.style.top = `${ringY}px`;
       raf = requestAnimationFrame(animate);
     };
+    raf = requestAnimationFrame(animate);
 
     const onEnter = () => {
       dot.classList.add('is-hovering');

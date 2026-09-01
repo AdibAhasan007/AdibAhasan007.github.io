@@ -9,7 +9,7 @@ interface GlitchTextProps {
 }
 
 export default function GlitchText({ text, className = '', as = 'span' }: GlitchTextProps) {
-  const Component = as as any;
+  const Component = as as React.ElementType;
 
   return (
     <Component

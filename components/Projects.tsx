@@ -193,7 +193,7 @@ export default function Projects() {
           {FILTERS.map((f) => (
             <button
               key={f.id}
-              onClick={() => setActiveFilter(f.id as any)}
+              onClick={() => setActiveFilter(f.id as 'all' | 'enterprise' | 'ai' | 'automation')}
               className={`px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl font-mono text-xs font-bold tracking-wider uppercase transition-all duration-200 ${
                 activeFilter === f.id
                   ? 'text-cyan-300 bg-[#061533] border border-cyan-400/60 shadow-[0_0_20px_rgba(0,240,255,0.3)]'
