@@ -406,8 +406,23 @@ body {
   }
 }
 
-/* On mobile/touch, disable chromatic distortion for 100% crisp readability */
+/* ── Mobile: Glitch সম্পূর্ণ Off — plain text render ────────────────
+   On mobile/touch devices, the .glitch-wrapper's position:relative
+   and its inner span's position:relative can interfere with iOS Safari's
+   background-clip:text rendering, making gradient headings invisible.
+   Fix: Reset everything to static/inline on mobile → no stacking context
+   → gradient text works perfectly on all iPhones and Android phones.
+   ─────────────────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
+  .glitch-wrapper {
+    position: static !important;
+    display: inline !important;
+  }
+
+  .glitch-wrapper > span {
+    position: static !important;
+  }
+
   .glitch-wrapper::before,
   .glitch-wrapper::after {
     display: none !important;
