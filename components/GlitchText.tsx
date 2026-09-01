@@ -16,7 +16,13 @@ export default function GlitchText({ text, className = '', as = 'span' }: Glitch
       data-text={text}
       className={`glitch-wrapper relative inline-block font-orbitron font-extrabold tracking-wide ${className}`}
     >
-      <span className="relative z-10 select-none">{text}</span>
+      {/*
+       * IMPORTANT: Do NOT add z-index here.
+       * z-index + position = new stacking context → breaks iOS Safari background-clip:text
+       * causing gradient text to appear completely invisible on iPhones.
+       * `position:relative` alone (no z-index) does NOT create a stacking context.
+       */}
+      <span className="relative select-none">{text}</span>
     </Component>
   );
 }

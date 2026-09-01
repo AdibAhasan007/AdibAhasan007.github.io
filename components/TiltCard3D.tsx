@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 
 interface TiltCard3DProps {
   children: React.ReactNode;
@@ -17,6 +17,14 @@ export default function TiltCard3D({
 }: TiltCard3DProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50, opacity: 0 });
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Cleanup the timer on unmount to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
@@ -64,13 +72,28 @@ export default function TiltCard3D({
     setTilt({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50, opacity: 0 });
   };
 
+  /**
+   * CRITICAL FIX: Do NOT reset tilt synchronously on touchEnd.
+   *
+   * When `setTilt()` fires immediately on touchEnd, React re-renders the card
+   * which resets the CSS transform. On iOS Safari, if a child element's position
+   * changes between touchstart and touchend (even by sub-pixel), iOS cancels the
+   * pending click event → all links inside TiltCard3D become untappable.
+   *
+   * Fix: Delay the reset by 150ms so iOS has time to fire the click event first.
+   */
+  const handleTouchEnd = () => {
+    if (resetTimerRef.current) clearTimeout(resetTimerRef.current);
+    resetTimerRef.current = setTimeout(handleEnd, 150);
+  };
+
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleEnd}
       onTouchMove={handleTouchMove}
-      onTouchEnd={handleEnd}
+      onTouchEnd={handleTouchEnd}
       onTouchCancel={handleEnd}
       className={`relative will-change-transform ${className}`}
       style={{

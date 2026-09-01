@@ -469,10 +469,9 @@ body {
 /* ── Scroll Progress Bar ─────────────────── */
 .scroll-progress {
   position: fixed;
-  top: 0;
-  left: 0;
-  /* iOS safe-area: sit below the status bar when in standalone mode */
+  /* Single top declaration: env() with 0 fallback for notch phones */
   top: env(safe-area-inset-top, 0);
+  left: 0;
   height: 3px;
   width: var(--scroll-progress, 0%);
   background: linear-gradient(90deg, #00f0ff 0%, #bd00ff 60%, #00ff66 100%);
@@ -504,15 +503,17 @@ body {
     display: none;
   }
 
-  /* Better touch targets (Apple recommends min 44×44px) */
-  a, button {
+  /* Better touch targets (Apple recommends min 44×44px) — height only to avoid
+     layout issues with inline anchor elements that have variable widths */
+  button,
+  [role="button"] {
     min-height: 44px;
-    min-width: 44px;
   }
 
-  /* Navbar links don't need 44px min-width constraint */
-  nav a {
-    min-width: unset;
+  /* Standalone nav/icon links get height target too */
+  header a,
+  footer a {
+    min-height: 44px;
   }
 
   /* Terminal window: reduce padding on small screens */

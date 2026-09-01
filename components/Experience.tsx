@@ -145,12 +145,18 @@ export default function Experience() {
 
                             {/* Direct Clickable Company Link Button */}
                             <div className="flex flex-wrap items-center gap-2 mt-2">
-                              <a
+                            <a
                                 href={exp.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-400/40 text-cyan-300 font-mono text-xs font-bold hover:bg-cyan-500/25 hover:border-cyan-300 hover:text-white transition-all shadow-[0_0_10px_rgba(0,240,255,0.2)] group"
                                 title={`Open ${exp.org} official website`}
+                                onClick={(e) => {
+                                  // iOS Safari: explicit window.open on click ensures
+                                  // the browser treats this as a user-initiated navigation
+                                  e.preventDefault();
+                                  window.open(exp.link, '_blank', 'noopener,noreferrer');
+                                }}
                               >
                                 <FiGlobe size={13} className="text-cyan-400 group-hover:rotate-12 transition-transform" />
                                 <span>{exp.org}</span>
@@ -210,6 +216,10 @@ export default function Experience() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="font-mono text-xs text-cyan-400 hover:text-cyan-200 flex items-center gap-1 font-bold ml-auto"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              window.open(exp.link, '_blank', 'noopener,noreferrer');
+                            }}
                           >
                             <span>OPEN COMPANY SITE</span>
                             <FiExternalLink size={12} />
